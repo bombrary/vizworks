@@ -1,0 +1,46 @@
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  width: 60%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.menu-left {
+  width: 10%;
+  box-sizing: border-box;
+}
+.menu-right {
+  width: 30%;
+  box-sizing: border-box;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+td {
+  margin: 0;
+  border: 1px dotted #000;
+  box-sizing: border-box;
+}
+
+.syntax p{
+  margin: 0;
+  padding: 0;
+}
+div.menu-right *{
+  margin: 0;
+  padding: 0;
+}
+.menu-right h2, .menu-right h3{
+  margin-top: 10px;
+}
