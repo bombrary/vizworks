@@ -7,7 +7,7 @@ const textarea = menu.append('textarea')
   .style('height', height - 20);
 
 const table = main.append('table');
-const [tdw, tdh] = [20, 20];
+const [tdw, tdh] = [30, 30];
 
 function update(data) {
   const tr = table.selectAll('tr')
@@ -24,26 +24,31 @@ function update(data) {
     .merge(td)
     .style('width', tdw)
     .style('height', tdh)
+    .style('text-align', 'center')
     .style('background-color', d => d.col)
     .html(d => d.text);
 }
 
-function strToMazeData(str) {
-  return str.split('\n')
+function strToMazeFormat(str) {
+  const tmp = str.split('\n');
+  const mp = tmp.slice(1)
     .map(d => d.split(''));
+  const start = tmp.slice(0, 1)[0]
+    .split(' ')
+    .map(d => Number(d));
+  return [mp, start];
 }
 
-const testcase01 = "\
-########\n\
-#......#\n\
-#.######\n\
-#..#...#\n\
-#..##..#\n\
-##.....#\n\
-########\
-";
-
-const mazeitr = new MazeHistoryIterator(solveMaze(strToMazeData(testcase01), [1, 1]));
+let mazeitr;
+const genButton = menu.append('input')
+  .attr('type', 'button')
+  .attr('value', 'generate')
+  .on('click', () => {
+    const input = textarea.property('value');
+    const [mp, start] = strToMazeFormat(input);
+    mazeitr = new MazeHistoryIterator(solveMaze(mp, start));
+    update(mazeitr.now());
+  });
 const itrButton = menu.append('input')
   .attr('type', 'button')
   .attr('value', 'iterate')
@@ -54,4 +59,42 @@ const itrButton = menu.append('input')
     } else {
       mazeitr.reset();
     }
+  });
+
+let timerEnabled = false;
+const playButton = menu.append('input')
+  .attr('type', 'button')
+  .attr('value', 'play')
+  .on('click', () => {
+    if (!timerEnabled) {
+      timerEnabled = true;
+      const t = d3.interval(() => {
+        if (mazeitr.hasNext()) {
+          update(mazeitr.now());
+          mazeitr.next();
+        } else {
+          mazeitr.reset();
+          t.stop();
+          timerEnabled = false;
+        }
+      }, 200);
+    }
+  });
+
+
+const testcase01 = "\
+1 1\n\
+########\n\
+#......#\n\
+#.######\n\
+#..#...#\n\
+#..##..#\n\
+##.....#\n\
+########";
+
+const testcaseButton = menu.append('input')
+  .attr('type', 'button')
+  .attr('value', 'testcase')
+  .on('click', () => {
+    textarea.property('value', testcase01);
   });

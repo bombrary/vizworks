@@ -43,6 +43,7 @@ div.menu-right *{
 }
 .menu-right h2, .menu-right h3{
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 svg {
