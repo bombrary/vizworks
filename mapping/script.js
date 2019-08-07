@@ -7,35 +7,98 @@ const [svgWidth, svgHeight] = [800, 500];
 svg.attr('width', svgWidth)
   .attr('height', svgHeight);
 
+(() => {
+  const marker = svg.append('defs')
+    .append('marker')
+    .attr('id', 'm_arr')
+    .attr('markerUnits', 'strokeWidth')
+    .attr('markerWidth', 5)
+    .attr('markerHeight', 5)
+    .attr('viewBox', '0 0 10 10')
+    .attr('refX', 5)
+    .attr('refY', 5)
+    .attr('orient', 'auto');
+  const path = marker.append('path')
+    .attr('fill', '#000')
+    .attr('d', `M0,0 L5,5 0,10 10,5`);
+})();
+
 const [rectWidth, rectHeight] = [40, 40];
-function update(data) {
+function update(data, dataIm) {
+  svg.select('g.data-elem').remove();
+  svg.select('g.data-image').remove();
   const startX = (svgWidth - rectWidth*data.length)/2;
   const g = svg.append('g')
-    .attr('transform', `translate(${startX}, ${svgHeight/2})`);
-  let elem = g.selectAll('g.elem')
+    .attr('class', 'data-elem')
+    .attr('transform', `translate(${startX}, ${svgHeight/4})`);
+  const elem = g.selectAll('g.elem')
     .data(data);
   elem.exit().remove();
   const elemEnter = elem.enter()
     .append('g');
   elemEnter.append('rect');
   elemEnter.append('text');
-  elem = elemEnter.merge(elem);
+  elemEnter.append('path');
 
-  elem.attr('transform', (d, i) => `translate(${rectWidth*i}, 0)`);
-  elem.select('rect')
+  const elemMerge = elemEnter.merge(elem);
+  elemMerge.attr('transform', (d, i) => `translate(${rectWidth*i}, 0)`);
+  elemMerge.select('rect')
     .attr('width', rectWidth)
     .attr('height', rectHeight)
     .attr('fill', '#fff')
     .attr('stroke', '#000');
-  elem.select('text')
+  elemMerge.select('text')
     .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'center')
+    .attr('dominant-baseline', 'central')
     .attr('dx', rectWidth/2)
-    .attr('dy', rectHeight/2+5)
+    .attr('dy', rectHeight/2)
     .text(d => d);
-  elem.select('rect')
-    .transition()
+
+  const [transStartY, transEndY] = [rectHeight + 10, svgHeight/2 - 10];
+  elemMerge.select('path')
+    .attr('stroke-width', 1.5)
+    .attr('marker-end', 'url(#m_arr)')
+    .attr('stroke', '#000')
+    .attr('d', `M${rectWidth/2} ${transStartY} L${rectWidth/2} ${transStartY+10}`);
+  const elemTransition = elemMerge.transition()
     .delay((d, i) => i*500)
     .duration(1000)
-    .attr('fill', 'orangered');
+  elemTransition.select('path')
+    .attr('d', `M${rectWidth/2} ${transStartY}, L${rectWidth/2} ${transEndY}`);
+
+  console.log(dataIm);
+  const gIm = svg.append('g')
+    .attr('class', 'data-image')
+    .attr('transform', `translate(${startX}, ${3*svgHeight/4})`);
+  const elemIm = gIm.selectAll('g.elem')
+    .data(dataIm);
+  elemIm.exit().remove();
+  const elemImEnter = elemIm.enter()
+    .append('g');
+  elemImEnter.append('rect');
+  elemImEnter.append('text');
+
+  const elemImMerge = elemImEnter.merge(elemIm);
+  elemImMerge.attr('transform', (d, i) => `translate(${rectWidth*i}, 0)`);
+  elemImMerge.select('rect')
+    .attr('width', rectWidth)
+    .attr('height', rectHeight)
+    .attr('fill', '#fff')
+    .attr('stroke', '#000');
+  elemImMerge.select('text')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .attr('dx', rectWidth/2)
+    .attr('dy', rectHeight/2)
+    .attr('fill', '#fff')
+    .text(d => d);
+
+  const elemImTransition = elemImMerge.transition()
+    .delay((d, i) => i*500)
+    .duration(1000)
+  elemImTransition.select('text')
+    .attr('fill', '#000');
 }
+
+const testcase01 = [1, 2, 10, 6 ,2];
+update(testcase01, testcase01.map(x => x*x));
