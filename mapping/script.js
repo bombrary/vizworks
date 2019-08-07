@@ -21,18 +21,20 @@ svg.attr('width', svgWidth)
   const path = marker.append('path')
     .attr('fill', '#000')
     .attr('d', `M0,0 L5,5 0,10 10,5`);
+  svg.append('g')
+    .attr('class', 'data-elem');
+  svg.append('g')
+    .attr('class', 'data-image');
 })();
 
 const [rectWidth, rectHeight] = [40, 40];
 function update(data, dataIm) {
-  svg.select('g.data-elem').remove();
-  svg.select('g.data-image').remove();
   const startX = (svgWidth - rectWidth*data.length)/2;
-  const g = svg.append('g')
-    .attr('class', 'data-elem')
+  const g = svg.select('g.data-elem')
     .attr('transform', `translate(${startX}, ${svgHeight/4})`);
-  const elem = g.selectAll('g.elem')
+  const elem = g.selectAll('g')
     .data(data);
+  console.log(elem.exit());
   elem.exit().remove();
   const elemEnter = elem.enter()
     .append('g');
@@ -66,11 +68,9 @@ function update(data, dataIm) {
   elemTransition.select('path')
     .attr('d', `M${rectWidth/2} ${transStartY}, L${rectWidth/2} ${transEndY}`);
 
-  console.log(dataIm);
-  const gIm = svg.append('g')
-    .attr('class', 'data-image')
+  const gIm = svg.select('g.data-image')
     .attr('transform', `translate(${startX}, ${3*svgHeight/4})`);
-  const elemIm = gIm.selectAll('g.elem')
+  const elemIm = gIm.selectAll('g')
     .data(dataIm);
   elemIm.exit().remove();
   const elemImEnter = elemIm.enter()
