@@ -1,0 +1,7 @@
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+svg {
+  border: 1px solid #000;
+}
