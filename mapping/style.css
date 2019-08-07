@@ -5,3 +5,16 @@
 svg {
   border: 1px solid #000;
 }
+
+.syntax p{
+  margin: 0;
+  padding: 0;
+}
+div.menu-right *{
+  margin: 0 0 0 30px;
+  padding: 0;
+}
+.menu-right h2, .menu-right h3{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
