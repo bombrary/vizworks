@@ -1,10 +1,8 @@
-const [width, height] = [800, 350];
 const body = d3.select('body');
-const flexContainer = body.select('div.flex-container');
-const menu = flexContainer.select('div.menu-container');
-const main = flexContainer.select('div.main-container');
+const article = body.select('article');
+const menu = article.select('section.menu-left');
+const main = article.select('section.content');
 const textarea = menu.select('textarea')
-  .style('height', height);
 const genButton = menu.append('input')
   .attr('type', 'button')
   .attr('value', 'generate');

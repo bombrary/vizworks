@@ -3,13 +3,24 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="flex-container">
-    <div class="menu-container">
+  <article>
+    <section class="menu-left">
       <textarea></textarea>
-    </div>
-    <div class="main-container">
-    </div>
-  </div>
+    </section>
+    <section class="content">
+    </section>
+    <section class="menu-right">
+      <h2>Syntax</h2>
+      <pre>
+n q
+com0 x0 y0
+com1 x1 y1
+...
+comq-1 xq-1 yq-1
+      </pre>
+      <p>based on <a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_A&lang=jp">AOJ DSL_2_A</a></p>
+    </section>
+  </article>
   <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
   <script type="text/javascript" src="RMQ.js"></script>
   <script type="text/javascript" src="script.js"></script>
