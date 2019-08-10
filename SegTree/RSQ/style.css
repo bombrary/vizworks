@@ -1,10 +1,22 @@
-.flex-container {
+article {
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
-.menu-container {
+
+section.content {
+  width: 70%;
   display: flex;
   flex-direction: column;
+}
+
+section.menu-left {
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+}
+section.menu-right {
+  width: 20%;
 }
 
 table {
@@ -12,7 +24,11 @@ table {
 }
 
 td {
-  border: solid 1px gray;
+  border: solid 1px #ccc;
   width: 100px;
   text-align: center;
+}
+
+textarea {
+  height: 400px;
 }
