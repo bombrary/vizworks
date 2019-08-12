@@ -1,0 +1,39 @@
+article {
+  display: flex;
+  flex-direction: row;
+}
+
+section.menu-left {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+section.content {
+  margin-left: 20px;
+  box-sizing: border-box;
+}
+section.menu-right {
+  margin-left: 20px;
+  box-sizing: border-box;
+}
+svg {
+  border: 1px solid #000;
+}
+
+text {
+  fill: #000;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+circle {
+  fill: #fff;
+  stroke: #000;
+}
+path.link {
+  fill: none;
+  stroke: #000;
+}
+path#gedit_arr {
+  fill: #000;
+  stroke: #000;
+}
