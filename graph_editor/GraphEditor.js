@@ -182,12 +182,12 @@ class GraphEditor {
           }
 
           const [xn, yn] = [x + 15*ex, y + 15*ey];
-          const [xs, ys] = [xn - 10*ey, yn + 10*ex];
-          const [xt, yt] = [xn + 10*ey, yn - 10*ex];
+          const [xs, ys] = [xn + 10*ey, yn - 10*ex];
+          const [xt, yt] = [xn - 10*ey, yn + 10*ex];
 
           const [xm, ym] = [x + 100*ex, y + 100*ey];
-          const [x1, y1] = [xm - 70*ey, ym + 70*ex];
-          const [x2, y2] = [xm + 70*ey, ym - 70*ex];
+          const [x1, y1] = [xm + 70*ey, ym - 70*ex];
+          const [x2, y2] = [xm - 70*ey, ym + 70*ex];
           return `M${xs},${ys} C${x1},${y1} ${x2},${y2} ${xt},${yt}`;
         }
 
