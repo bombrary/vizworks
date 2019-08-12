@@ -12,8 +12,11 @@ const genButton = menu.append('input')
   .attr('value', 'generate');
 
 const gEdit = new GraphEditor(svg, true);
-gEdit.addNode({name: 0});
-gEdit.addNode({name: 1});
-gEdit.addNode({name: 2});
-gEdit.addLink({source: 0, target: 2});
+
+for (let i = 0; i < 5; i++) gEdit.addNode({name: i});
+for (let i = 0; i < 5; i++) {
+  for (let j = i + 1; j < 5; j++) {
+    gEdit.addLink({source: i, target: j});
+  }
+}
 gEdit.restart();

@@ -24,12 +24,13 @@ text {
   fill: #000;
   text-anchor: middle;
   dominant-baseline: central;
+  pointer-events: none;
 }
 circle {
   fill: #fff;
   stroke: #000;
 }
-path.link {
+g.link path {
   fill: none;
   stroke: #000;
 }
