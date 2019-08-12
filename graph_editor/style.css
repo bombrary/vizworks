@@ -20,6 +20,15 @@ svg {
   border: 1px solid #000;
 }
 
+p.input-form {
+  padding: 0;
+  margin: 0;
+}
+
+textarea {
+  height: 300px;
+}
+
 text {
   fill: #000;
   text-anchor: middle;
@@ -38,3 +47,4 @@ path#gedit_arr {
   fill: #000;
   stroke: #000;
 }
+

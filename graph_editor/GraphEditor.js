@@ -8,12 +8,10 @@ class GraphEditor {
     this.markerWidth = 10;
     this.markerHeight = 10;
     this.chargeStrength = -1000;
-    this.linkDistance = 200;
+    this.linkDistance = 150;
+    this.adjacentLinkSep = 3;
 
-    this.nodes = {};
-    this.links = {};
-    this.nodeIdHead = 0;
-    this.linkIdHead = 0;
+    this.initGraph();
 
     this.svg = svg;
     const [svgWidth, svgHeight] = [svg.attr('width'), svg.attr('height')];
@@ -25,10 +23,10 @@ class GraphEditor {
       .selectAll('.link')
 
     this.simulation = d3.forceSimulation();
+    this.isDirected = isDirected;
     this.initSimulation();
     if (isDirected) {
       this.makeArrow();
-      this.simulation.on('tick', this.tickedDirected.bind(this));
     }
   }
 
@@ -37,8 +35,14 @@ class GraphEditor {
   }
   get linksArr() {
     return d3.values(this.links);
- }
-  
+  }
+
+  initGraph() {
+    this.nodes = {};
+    this.links = {};
+    this.nodeNum = 0;
+    this.linkNum = 0;
+  }
   initSimulation() {
     this.simulation = this.simulation.nodes(this.nodesArr)
       .force('charge', d3.forceManyBody().strength(this.chargeStrength))
@@ -47,6 +51,9 @@ class GraphEditor {
       .force('y', d3.forceY())
       .alphaTarget(1)
       .on('tick', this.ticked.bind(this)); // NOT this.ticked (pay attention to the action of 'this'.)
+    if (this.isDirected) this.simulation.on('tick', this.tickedDirected.bind(this));
+    else this.simulation.on('tick', this.ticked.bind(this));
+    this.simulation.alpha(1).restart();
   }
   makeArrow() {
     const marker = svg.append('defs')
@@ -63,12 +70,12 @@ class GraphEditor {
       .attr('d', `M0,0 L1,1 0,2 2,1`);
   }
   addNode(obj) {
-    this.nodes[this.nodeIdHead] = Object.assign({id: this.nodeIdHead}, obj);
-    return this.nodeIdHead++;
+    this.nodes[this.nodeNum] = Object.assign({id: this.nodeNum}, obj);
+    return this.nodeNum++;
   }
   addLink(obj) {
-    this.links[this.linkIdHead] = Object.assign({id: this.linkIdHead}, obj);
-    return this.linkIdHead++;
+    this.links[this.linkNum] = Object.assign({id: this.linkNum}, obj);
+    return this.linkNum++;
   }
   removeNode(id) {
     this.getLinksAdjacent(id).forEach((d) => {
@@ -98,14 +105,15 @@ class GraphEditor {
       .append('g')
       .attr('class', 'node')
       .call(d3.drag()
-          .on('start', this.dragstarted.bind(this))
-          .on('drag', this.dragged.bind(this))
-          .on('end', this.dragended.bind(this)));
+        .on('start', this.dragstarted.bind(this))
+        .on('drag', this.dragged.bind(this))
+        .on('end', this.dragended.bind(this)));
     nodeEnter.append('circle')
       .attr('r', this.r)
     nodeEnter.append('text')
-      .text(d => d.name);
-    this.node = nodeEnter.merge(this.node);
+    this.node = nodeEnter.merge(this.node)
+    this.node.select('text')
+      .text(d => d.label);
 
     this.link = this.link.data(this.linksArr, d => d.id);
     this.link.exit().remove();
@@ -113,8 +121,17 @@ class GraphEditor {
       .append('g')
       .attr('class', 'link');
     linkEnter.append('path')
-      .attr('marker-end', 'url(#gedit_arr)');
+      .attr('marker-end', 'url(#gedit_arr)')
+      .attr('id', d => `path-${d.id}`);
+    linkEnter.append('text')
+      .attr('dx', this.linkDistance/4)
+      .attr('dy', -2)
+      .append('textPath')
+      .attr('xlink:href', d => `#path-${d.id}`);
     this.link = linkEnter.merge(this.link);
+    this.link.select('text')
+      .select('textPath')
+      .text(d => d.label !== undefined ? d.label : '');
 
     this.simulation.nodes(this.nodesArr);
     this.simulation.force('link').links(this.linksArr);
@@ -138,7 +155,7 @@ class GraphEditor {
 
   ticked() {
     this.node.attr('transform', d => `translate(${d.x}, ${d.y})`);
-    this.link.selet('path')
+    this.link.select('path')
       .attr('d', d => { 
         const r = this.r + this.nodeLinkSep;
         const [sx, sy] = [d.source.x, d.source.y];
@@ -160,7 +177,10 @@ class GraphEditor {
         const [dx, dy] = [tx - sx, ty - sy];
         const dist = Math.sqrt(dx*dx + dy*dy);
         const [ex, ey] = [dx / dist, dy / dist];
-        return `M${sx + rstart*ex},${sy + rend*ey} L${tx - rend*ex},${ty - rend*ey}`
+        const [iex, iey] = [ey, -ex];
+        const alsep = this.adjacentLinkSep;
+        return `M${sx + rstart*ex + alsep*iex},${sy + rend*ey + alsep*iey}` +
+          `L${tx - rend*ex + alsep*iex},${ty - rend*ey + alsep*iey}`;
       });
   }
 }
