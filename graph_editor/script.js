@@ -26,7 +26,9 @@ genButton.on('click', () => {
 
   const links = input.slice(1);
   for (const link of links) {
-    gEdit.addLink({source: link[0], target: link[1], label: link[2]});
+    if (link.length >= 2) {
+      gEdit.addLink({source: link[0], target: link[1], label: link[2]});
+    }
   }
 
   gEdit.restart();

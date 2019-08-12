@@ -19,13 +19,22 @@
       </section>
       <section class="menu-right">
         <h2>Syntax</h2>
-        <pre>
-V
+<pre>V
 s1 t1 (l1)
 s2 t2 (l2)
 ...
-sV tV (lV)
-        </pre>
+sV tV (lV)</pre>
+        <h2>GraphEditor Class</h2>
+        <ul>
+          <li>GraphEditor(svgSelection, isDirected): constructor</li>
+          <li>GraphEditor.addNode(obj): returns id of node. Node's label is put by property 'label'.</li>
+          <li>GraphEditor.addLink(obj): returns id of edge, should has property of source and target. Edge label is put by property 'label'.</li>
+          <li>GraphEditor.removeNode(id): removes node whose ID is id.</li>
+          <li>GraphEditor.removeLink(id): removes link whose ID is id.</li>
+          <li>GraphEditor.restart(): updates graph data to view.</li>
+          <li>GraphEditor.initGraph(): makes nodes and links empty.</li>
+          <li>GraphEditor.initSimulation(): resets charge strength and link distance.</li>
+          </li>
       </section>
     </article>
     <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>

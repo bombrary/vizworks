@@ -113,7 +113,7 @@ class GraphEditor {
     nodeEnter.append('text')
     this.node = nodeEnter.merge(this.node)
     this.node.select('text')
-      .text(d => d.label);
+      .text(d => d.label !== undefined ? d.label : '');
 
     this.link = this.link.data(this.linksArr, d => d.id);
     this.link.exit().remove();
