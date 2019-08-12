@@ -170,6 +170,27 @@ class GraphEditor {
     this.node.attr('transform', d => `translate(${d.x}, ${d.y})`);
     this.link.select('path')
       .attr('d', d => { 
+        if (d.source.id === d.target.id) {
+          const [x, y] = [d.source.x, d.source.y];
+          const dist = Math.sqrt(x*x + y*y);
+
+          let ex, ey
+          if (dist < 1e-9) {
+            [ex, ey] = [1, 0];
+          } else {
+            [ex, ey] = [x / dist, y / dist];
+          }
+
+          const [xn, yn] = [x + 15*ex, y + 15*ey];
+          const [xs, ys] = [xn - 10*ey, yn + 10*ex];
+          const [xt, yt] = [xn + 10*ey, yn - 10*ex];
+
+          const [xm, ym] = [x + 100*ex, y + 100*ey];
+          const [x1, y1] = [xm - 70*ey, ym + 70*ex];
+          const [x2, y2] = [xm + 70*ey, ym - 70*ex];
+          return `M${xs},${ys} C${x1},${y1} ${x2},${y2} ${xt},${yt}`;
+        }
+
         const rstart = this.r + this.nodeLinkSep;
         const rend = this.r + this.nodeMarkerSep;
         const [sx, sy] = [d.source.x, d.source.y];

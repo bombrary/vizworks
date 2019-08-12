@@ -9,11 +9,12 @@ const svg = article.select('section.content')
 const textarea = menu.select('textarea');
 const chargeStrengthP = menu.select('input#chargeStrength_number')
 const linkDistanceP = menu.select('input#linkDistance_number')
-const genButton = menu.select('input#gen_button');
+const genButton0 = menu.select('input#gen_button0');
+const genButton1 = menu.select('input#gen_button1');
 
 const gEdit = new GraphEditor(svg, true);
 
-genButton.on('click', () => {
+genButton0.on('click', () => {
   gEdit.initGraph();
   const input = textarea.property('value')
     .split('\n')
@@ -33,6 +34,30 @@ genButton.on('click', () => {
 
   gEdit.restart();
 });
+
+genButton1.on('click', () => {
+  gEdit.initGraph();
+  const input = textarea.property('value')
+    .split('\n')
+    .map(d => d.split(' '))
+
+  const nodeNum = input[0][0];
+  for (let i = 0; i < nodeNum; i++) {
+    gEdit.addNode({label: i+1});
+  }
+
+  const links = input.slice(1);
+  for (const link of links) {
+    if (link.length >= 2) {
+      link[0]--;
+      link[1]--;
+      gEdit.addLink({source: link[0], target: link[1], label: link[2]});
+    }
+  }
+
+  gEdit.restart();
+});
+
 chargeStrengthP.attr('value', gEdit.chargeStrength)
   .on('change', function() {
     const input = d3.select(this).property('value');
@@ -57,5 +82,6 @@ const testcase01 =
   '3 4\n' +
   '3 5\n' +
   '4 5 10\n' +
-  '5 4 23';
+  '5 4 23\n' +
+  '0 0';
 textarea.property('value', testcase01);
