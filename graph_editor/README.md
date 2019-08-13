@@ -2,17 +2,24 @@
 
 ## Methods
 
-- GraphEditor(svgSelection[, isDirected]): constructor
-- GraphEditor.addNode(obj): returns id of node. Node's label is put by property 'label'.
-- GraphEditor.addLink(obj): returns id of edge, should has property of source and target. Edge label is put by property 'label'.
-- GraphEditor.removeNode(id): removes node whose ID is id.
-- GraphEditor.removeLink(id): removes link whose ID is id.
-- GraphEditor.getLinksAdjacent(id): gets IDs of links which satisfies source is id or target is id.
-- GraphEditor.restart(): updates graph data to view.
-- GraphEditor.initGraph(): makes nodes and links empty.
-- GraphEditor.initSimulation(): resets charge strength and link distance.
-
-- getter: GraphEditor.
+- GraphEditor(svgSelection[, isDirected])  
+  constructor
+- GraphEditor.addNode(obj):  
+  returns id of node. Node's label is put by property 'label'.
+- GraphEditor.addLink(obj):  
+  returns id of edge, should has property of source and target. Edge label is put by property 'label'.
+- GraphEditor.removeNode(id):  
+  removes node whose ID is id.
+- GraphEditor.removeLink(id):  
+  removes link whose ID is id.
+- GraphEditor.getLinksAdjacent(id):  
+  gets IDs of links which satisfies source is id or target is id.
+- GraphEditor.restart():  
+  updates graph data to view.
+- GraphEditor.initGraph():  
+  makes nodes and links empty.
+- GraphEditor.initSimulation():  
+  resets charge strength and link distance.
 
 ## Properties
 
@@ -63,8 +70,10 @@ console.log(this.nodes).
 ```
 
 So the time complexity is bellow:
+
 - addNode(obj): O(1).
 - addLink(obj): O(1).
 - removeNode(id): O([number of links]) because of using getLinksAdjacent(id).
 - removeLink(id): O(1).
+
 If you use it more conveniently (e.g: making addLink and removeLink take arguments (from, to)), you may wrap GraphEditor.
