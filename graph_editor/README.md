@@ -26,7 +26,7 @@
 ### Settings of drawing graph
 
 - GraphEditor.r = 10; : circle radius.
-- this.nodeLinkSep = 2; : separation between node and link.
+- GraphEditor.nodeLinkSep = 2; : separation between node and link.
 - GraphEditor.nodeMarkerSep = 5; : separation between node and arrow.
 - GraphEditor.markerWidth = 10; : arrow width.
 - GraphEditor.markerHeight = 10; : arrow height.
