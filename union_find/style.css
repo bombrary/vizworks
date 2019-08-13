@@ -16,6 +16,10 @@ section.content {
   margin-left: 20px;
   box-sizing: border-box;
 }
+section.query-info {
+  margin-left: 20px;
+  box-sizing: border-box;
+}
 section.menu-right {
   margin-left: 20px;
   box-sizing: border-box;

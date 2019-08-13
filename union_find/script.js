@@ -14,9 +14,8 @@ const queryButton = menu.select('input#query_button');
 const itrButton   = menu.select('input#itr_button');
 const playButton  = menu.select('input#play_button');
 const stopButton  = menu.select('input#stop_button');
-const queryInfo = article.select('section.query-info')
-  .append('ul');
-
+const queryInfo = article.select('section.query-info ul')
+const qInfoHead = article.select('p#qInfo_head');
 
 const gEdit = new GraphEditor(svg, true);
 gEdit.chargeStrength = -300;
@@ -45,40 +44,57 @@ const updateQueryInfo = (data) => {
   li.enter()
     .append('li')
     .merge(li)
-    .text(d => d);
+    .text(d => (d[0] ? `same` : `unite`) + `(${d[1]}, ${d[2]})`);
 };
 queryButton.on('click', () => {
   const input = textarea.property('value')
     .split('\n')
+    .filter(d => d !== '')
     .map(d => d.split(' '))
-    .map(d0 => d0.map(d1 => Number(d1)));
+    .map(d0 => d0.map(d1 => Number(d1)))
   q = new Query(input.slice(1));
   uf = new UnionFind(input[0][0], gEdit);
   updateQueryInfo(q.data);
 });
+
+const executeQuery = (query) => {
+  let [c, x, y] = query;
+  if (c === 0) {
+    uf.unite(x, y);
+    qInfoHead.text(`united: ${x} and ${y}`);
+  } else {
+    qInfoHead.text(`same(${x}, ${y}): ${uf.same(x, y)}`); 
+  }
+};
 itrButton.on('click', () => {
   if (q.hasNext) {
-    let [c, x, y] = q.now;
+    executeQuery(q.now);
     q.next();
-    if (c === 0) uf.unite(x, y);
-    else console.log(uf.same(x, y));
     updateQueryInfo(q.data.slice(q.cnt));
   }
 });
+
+let timer;
 playButton.on('click', () => {
   playButton.property('disabled', true);
-  const t = d3.interval(() => {
+  stopButton.property('disabled', false);
+  timer = d3.interval(() => {
     if (q.hasNext) {
-      let [c, x, y] = q.now;
+      executeQuery(q.now);
       q.next();
-      if (c === 0) uf.unite(x, y);
-      else console.log(uf.same(x, y));
       updateQueryInfo(q.data.slice(q.cnt));
     } else {
       playButton.property('disabled', false);
-      t.stop();
+      timer.stop();
     }
   }, 500);
+});
+
+stopButton.property('disabled', true);
+stopButton.on('click', () => {
+  timer.stop();
+  playButton.property('disabled', false);
+  stopButton.property('disabled', false);
 });
 
 const testcase01 = 

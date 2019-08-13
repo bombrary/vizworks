@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <title>Union Find Tree</title>
+    <title>Union Find</title>
   </head>
   <body>
-    <h1>Union Find Tree</h1>
+    <h1>Union Find (Disjoint Data Structure)</h1>
     <article>
       <section class="menu-left">
         <textarea></textarea>
@@ -21,16 +21,22 @@
         <svg></svg>
       </section>
       <section class="query-info">
+        <p id="qInfo_head"></p>
+        <ul></ul>
       </section>
       <section class="menu-right">
         <h2>Syntax</h2>
-<pre>V
+<pre>N
 c1 x1 y1
 c2 x2 y2
 ...
-cV xV yV</pre>
+cQ xQ yQ</pre>
+<p>N: number of nodes</p>
+<p>(Q: number of queries)</p>
+<p>xi, yi: 0-indexed</p>
 <p>ci = 0: unite(xi, yi)</p>
 <p>ci = 1: same(xi, yi)</p>
+<p>Format is based on <a href="http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_1_A">AOJ DSL_1_A</a>.</p>
       </section>
     </article>
     <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>

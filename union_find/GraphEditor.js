@@ -10,6 +10,12 @@ class GraphEditor {
     this.chargeStrength = -1000;
     this.linkDistance = 150;
     this.adjacentLinkSep = 3;
+    this.hasSelfLoop = true;
+    this.isDirected = true;
+
+    if (isDirected !== undefined) {
+      this.isDirected = isDirected;
+    }
 
     this.initGraph();
 
@@ -21,9 +27,9 @@ class GraphEditor {
       .selectAll('.node')
     this.link = this.g.append('g')
       .selectAll('.link')
+    this.defs = svg.append('defs');
 
     this.simulation = d3.forceSimulation();
-    this.isDirected = isDirected;
     this.initSimulation();
     if (isDirected) {
       this.makeArrow();
@@ -56,7 +62,7 @@ class GraphEditor {
     this.simulation.alpha(1).restart();
   }
   makeArrow() {
-    const marker = svg.append('defs')
+    const marker = this.defs
       .append('marker')
       .attr('id', 'gedit_arr')
       .attr('markerUnits', 'strokeWidth')
@@ -86,16 +92,9 @@ class GraphEditor {
   removeLink(id) {
     delete this.links[id]
   }
-
   getLinksAdjacent(id) {
     return this.linksArr.filter((d) => 
       d.source.id === id || d.target.id === id);
-  }
-  getLinksIncoming(id) {
-    return this.linksArr.filter((d) => d.target.id === id);
-  }
-  getLinksOutcoming(id) {
-    return this.linksArr.filter((d) => d.source.id === id);
   }
 
   restart() {
@@ -171,6 +170,8 @@ class GraphEditor {
     this.link.select('path')
       .attr('d', d => { 
         if (d.source.id === d.target.id) {
+          if (!this.hasSelfLoop) return '';
+
           const [x, y] = [d.source.x, d.source.y];
           const dist = Math.sqrt(x*x + y*y);
 
