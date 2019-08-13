@@ -61,7 +61,7 @@ gedit.node.select('circle')
 
 ## Data Structure
 
-Node and link is structured by JavaScript Object.
+Node and link is made of JavaScript Object.
 Both is consited in the elements {id: obj}.  
 Example:
 ```js
