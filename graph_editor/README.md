@@ -39,6 +39,10 @@
 - GraphEditor.adjacentLinkSep = 3; : link separation between bilateral links.
 - GraphEditor.hasSelfLoop = true; : If it is true, self loop is drawn.
 - GraphEditor.isDirected = true; : If it is true, directed graph is drawn.
+- GraphEditor.selfLoopCloseHeight = 16; : separation between node and self loop.
+- GraphEditor.selfLoopCloseBottom = 4; : opening angle path of start and end.
+- GraphEditor.selfLoopFarHeight = 80; : length of self loop.
+- GraphEditor.selfLoopFarBottom = 40; : opening angle of self loop.
 
 ### Data
 - GraphEditor.nodes: node data.
