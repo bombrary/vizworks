@@ -23,16 +23,39 @@
 
 ## Properties
 
-- GraphEditor.r = 10; : Circle radius.
-- this.nodeLinkSep = 2; : Separation between node and link.
-- GraphEditor.nodeMarkerSep = 5; : Separation between node and arrow.
-- GraphEditor.markerWidth = 10; : Arrow width.
-- GraphEditor.markerHeight = 10; : Arrow height.
-- GraphEditor.chargeStrength = -1000; : The value for force simulation.
-- GraphEditor.linkDistance = 150; : The value for force simulation.
-- GraphEditor.adjacentLinkSep = 3; : Link separation between bilateral links.
+### Settings of drawing graph
+
+- GraphEditor.r = 10; : circle radius.
+- this.nodeLinkSep = 2; : separation between node and link.
+- GraphEditor.nodeMarkerSep = 5; : separation between node and arrow.
+- GraphEditor.markerWidth = 10; : arrow width.
+- GraphEditor.markerHeight = 10; : arrow height.
+- GraphEditor.chargeStrength = -1000; : the value for force simulation.
+- GraphEditor.linkDistance = 150; : the value for force simulation.
+- GraphEditor.adjacentLinkSep = 3; : link separation between bilateral links.
 - GraphEditor.hasSelfLoop = true; : If it is true, self loop is drawn.
 - GraphEditor.isDirected = true; : If it is true, directed graph is drawn.
+
+### Data
+- GraphEditor.nodes: node data.
+- GraphEditor.links: link data.
+- GraphEditor.nodesArr: (getter) node data as an array for binding data.
+- GraphEditor.linksArr: (getter) link data as an array for binding data.
+
+### Selection
+- GraphEditor.svg: svg selection
+- GraphEditor.node: node selection, which consist of circle and text.
+- GraphEditor.link: link selection, which consist of path and text (textPath)
+- GraphEditor.defs: defs selection for making arrow.
+
+If you want to change styles of nodes and links, you may use GraphEditor.node and GraphEditor.link.
+Example: Change fill of nodes red whose ID is odd.
+```js
+const gedit = new GraphEditor(d3.select('svg'));
+...
+gedit.node.select('circle')
+  .style('fill', (d, i) => d.id % 2 ? 'red' : 'white');
+```
 
 ## Data Structure
 
