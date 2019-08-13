@@ -27,6 +27,7 @@ class GraphEditor {
       .selectAll('.node')
     this.link = this.g.append('g')
       .selectAll('.link')
+    this.defs = svg.append('defs');
 
     this.simulation = d3.forceSimulation();
     this.initSimulation();
@@ -61,7 +62,7 @@ class GraphEditor {
     this.simulation.alpha(1).restart();
   }
   makeArrow() {
-    const marker = svg.append('defs')
+    const marker = this.defs
       .append('marker')
       .attr('id', 'gedit_arr')
       .attr('markerUnits', 'strokeWidth')

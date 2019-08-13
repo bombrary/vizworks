@@ -52,7 +52,9 @@ If you want to change styles of nodes and links, you may use GraphEditor.node an
 Example: Change fill of nodes red whose ID is odd.
 ```js
 const gedit = new GraphEditor(d3.select('svg'));
-...
+
+/* Add some nodes ... */
+
 gedit.node.select('circle')
   .style('fill', (d, i) => d.id % 2 ? 'red' : 'white');
 ```
