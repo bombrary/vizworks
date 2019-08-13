@@ -48,7 +48,7 @@
 - GraphEditor.link: link selection, which consist of path and text (textPath)
 - GraphEditor.defs: defs selection for making arrow.
 
-If you want to change styles of nodes and links, you may use GraphEditor.node and GraphEditor.link.
+If you want to change styles of nodes and links, you may use GraphEditor.node and GraphEditor.link.  
 Example: Change fill of nodes red whose ID is odd.
 ```js
 const gedit = new GraphEditor(d3.select('svg'));
@@ -62,7 +62,7 @@ gedit.node.select('circle')
 ## Data Structure
 
 Node and link is structured by JavaScript Object.
-Both is consited in the elements {id: obj}.
+Both is consited in the elements {id: obj}.  
 Example:
 ```js
 // Assume svg element has already exist.
