@@ -10,6 +10,12 @@ class GraphEditor {
     this.chargeStrength = -1000;
     this.linkDistance = 150;
     this.adjacentLinkSep = 3;
+    this.hasSelfLoop = true;
+    this.isDirected = true;
+
+    if (isDirected !== undefined) {
+      this.isDirected = isDirected;
+    }
 
     this.initGraph();
 
@@ -23,7 +29,6 @@ class GraphEditor {
       .selectAll('.link')
 
     this.simulation = d3.forceSimulation();
-    this.isDirected = isDirected;
     this.initSimulation();
     if (isDirected) {
       this.makeArrow();
@@ -86,16 +91,9 @@ class GraphEditor {
   removeLink(id) {
     delete this.links[id]
   }
-
   getLinksAdjacent(id) {
     return this.linksArr.filter((d) => 
       d.source.id === id || d.target.id === id);
-  }
-  getLinksIncoming(id) {
-    return this.linksArr.filter((d) => d.target.id === id);
-  }
-  getLinksOutcoming(id) {
-    return this.linksArr.filter((d) => d.source.id === id);
   }
 
   restart() {
@@ -171,6 +169,8 @@ class GraphEditor {
     this.link.select('path')
       .attr('d', d => { 
         if (d.source.id === d.target.id) {
+          if (!this.hasSelfLoop) return '';
+
           const [x, y] = [d.source.x, d.source.y];
           const dist = Math.sqrt(x*x + y*y);
 
@@ -197,6 +197,9 @@ class GraphEditor {
         const [tx, ty] = [d.target.x, d.target.y];
         const [dx, dy] = [tx - sx, ty - sy];
         const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 1e-9) {
+          return `M${sx},${sy} L${tx},${ty}`;
+        }
         const [ex, ey] = [dx / dist, dy / dist];
         const [iex, iey] = [ey, -ex];
         const alsep = this.adjacentLinkSep;
