@@ -97,6 +97,13 @@ class GraphEditor {
       d.source.id === id || d.target.id === id);
   }
 
+  setNodeProperty(id, key, val) {
+    this.nodes[id][key] = val;
+  }
+  setLinkProperty(id, key, val) {
+    this.links[id][key] = val;
+  }
+
   restart() {
     this.node = this.node.data(this.nodesArr, d => d.id);
     this.node.exit().remove();

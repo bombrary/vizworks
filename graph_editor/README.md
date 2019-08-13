@@ -12,6 +12,10 @@
   removes node whose ID is id.
 - GraphEditor.removeLink(id):  
   removes link whose ID is id.
+- GraphEditor.setNodeProperty(id, key, val):  
+  is equal to GraphEditor.nodes\[id\]\[key\] = val
+- GraphEditor.setLinkProperty(id, key, val):  
+  is equal to GraphEditor.link\[id\]\[key\] = val
 - GraphEditor.getLinksAdjacent(id):  
   gets IDs of links which satisfies source is id or target is id.
 - GraphEditor.restart():  
