@@ -1,0 +1,84 @@
+h2 {
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+article {
+  display: flex;
+  flex-direction: row;
+}
+
+section.menu-left {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+section.content {
+  margin-left: 20px;
+  box-sizing: border-box;
+}
+section.menu-right {
+  margin-left: 20px;
+  box-sizing: border-box;
+}
+svg {
+  border: 1px solid #000;
+}
+
+p.input-form {
+  width: 150px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+textarea {
+  height: 300px;
+  width: 150px;
+}
+
+text {
+  fill: #000;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+circle {
+  fill: #fff;
+  stroke: #000;
+}
+g.link path {
+  fill: none;
+  stroke: #000;
+}
+path#gedit_arr {
+  fill: #000;
+  stroke: #000;
+}
+
+ul {
+  margin: 0 0 0 10px;
+  padding: 0;
+}
+
+p.input-form p {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+}
+p.input-form p input{
+  width: 75px;
+}
+
+.query-info ul li {
+  list-style-type: none;
+}
+.query-info ul li:first-child {
+  background-color: lightgreen;
+}
+
+.menu-right p {
+  margin: 0;
+  padding: 0;
+}

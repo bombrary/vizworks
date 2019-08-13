@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Union Find Tree</title>
+  </head>
+  <body>
+    <h1>Union Find Tree</h1>
+    <article>
+      <section class="menu-left">
+        <textarea></textarea>
+        <p class="input-form" ><label>Charge strength: </label><input id="chargeStrength_number" type="number"></p>
+        <p class="input-form" ><label>Link distance: </label><input id="linkDistance_number" type="number"></p>
+        <p class="input-form" ><input id="query_button" type="button" value="load query"></p>
+        <p class="input-form" ><input id="itr_button" type="button" value="iterate"></p>
+        <p class="input-form" ><input id="play_button" type="button" value="play"></p>
+        <p class="input-form" ><input id="stop_button" type="button" value="stop"></p>
+      </section>
+      <section class="content">
+        <svg></svg>
+      </section>
+      <section class="query-info">
+      </section>
+      <section class="menu-right">
+        <h2>Syntax</h2>
+<pre>V
+c1 x1 y1
+c2 x2 y2
+...
+cV xV yV</pre>
+<p>ci = 0: unite(xi, yi)</p>
+<p>ci = 1: same(xi, yi)</p>
+      </section>
+    </article>
+    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="GraphEditor.js"></script>
+    <script type="text/javascript" src="UnionFind.js"></script>
+    <script type="text/javascript" src="Query.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+  </body>
+</html>
+
