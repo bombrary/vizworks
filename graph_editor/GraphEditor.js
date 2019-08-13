@@ -5,13 +5,16 @@ class GraphEditor {
     this.r = 10;
     this.nodeLinkSep = 2;
     this.nodeMarkerSep = 5;
-    this.markerWidth = 10;
-    this.markerHeight = 10;
+    this.markerSize = 10;
+    this.adjacentLinkSep = 3;
     this.chargeStrength = -1000;
     this.linkDistance = 150;
-    this.adjacentLinkSep = 3;
     this.hasSelfLoop = true;
     this.isDirected = true;
+    this.selfLoopCloseHeight = 16;
+    this.selfLoopCloseBottom = 4;
+    this.selfLoopFarHeight = 80;
+    this.selfLoopFarBottom = 40;
 
     if (isDirected !== undefined) {
       this.isDirected = isDirected;
@@ -30,10 +33,10 @@ class GraphEditor {
     this.defs = svg.append('defs');
 
     this.simulation = d3.forceSimulation();
-    this.initSimulation();
     if (isDirected) {
       this.makeArrow();
     }
+    this.initSimulation();
   }
 
   get nodesArr() {
@@ -57,8 +60,12 @@ class GraphEditor {
       .force('y', d3.forceY())
       .alphaTarget(1)
       .on('tick', this.ticked.bind(this)); // NOT this.ticked (pay attention to the action of 'this'.)
-    if (this.isDirected) this.simulation.on('tick', this.tickedDirected.bind(this));
-    else this.simulation.on('tick', this.ticked.bind(this));
+    if (this.isDirected) {
+      this.simulation.on('tick', this.tickedDirected.bind(this));
+      this.setMarkerSize();
+    } else {
+      this.simulation.on('tick', this.ticked.bind(this));
+    }
     this.simulation.alpha(1).restart();
   }
   makeArrow() {
@@ -66,14 +73,17 @@ class GraphEditor {
       .append('marker')
       .attr('id', 'gedit_arr')
       .attr('markerUnits', 'strokeWidth')
-      .attr('markerWidth', this.markerWidth)
-      .attr('markerHeight', this.markerHeight)
       .attr('viewBox', '0 0 2 2')
       .attr('refX', 1)
       .attr('refY', 1)
       .attr('orient', 'auto');
     const path = marker.append('path')
       .attr('d', `M0,0 L1,1 0,2 2,1`);
+  }
+  setMarkerSize() {
+    this.defs.select('marker')
+      .attr('markerWidth', this.markerSize)
+      .attr('markerHeight', this.markerSize)
   }
   addNode(obj) {
     this.nodes[this.nodeNum] = Object.assign({id: this.nodeNum}, obj);
@@ -115,9 +125,10 @@ class GraphEditor {
         .on('drag', this.dragged.bind(this))
         .on('end', this.dragended.bind(this)));
     nodeEnter.append('circle')
-      .attr('r', this.r)
     nodeEnter.append('text')
     this.node = nodeEnter.merge(this.node)
+    this.node.select('circle')
+      .attr('r', this.r)
     this.node.select('text')
       .text(d => d.label !== undefined ? d.label : '');
 
@@ -176,43 +187,53 @@ class GraphEditor {
     this.node.attr('transform', d => `translate(${d.x}, ${d.y})`);
     this.link.select('path')
       .attr('d', d => { 
-        if (d.source.id === d.target.id) {
-          if (!this.hasSelfLoop) return '';
-
-          const [x, y] = [d.source.x, d.source.y];
-          const dist = Math.sqrt(x*x + y*y);
-
-          let ex, ey
-          if (dist < 1e-9) {
-            [ex, ey] = [1, 0];
-          } else {
-            [ex, ey] = [x / dist, y / dist];
-          }
-
-          const [xn, yn] = [x + 15*ex, y + 15*ey];
-          const [xs, ys] = [xn + 10*ey, yn - 10*ex];
-          const [xt, yt] = [xn - 10*ey, yn + 10*ex];
-
-          const [xm, ym] = [x + 100*ex, y + 100*ey];
-          const [x1, y1] = [xm + 70*ey, ym - 70*ex];
-          const [x2, y2] = [xm - 70*ey, ym + 70*ex];
-          return `M${xs},${ys} C${x1},${y1} ${x2},${y2} ${xt},${yt}`;
-        }
-
-        const rstart = this.r + this.nodeLinkSep;
-        const rend = this.r + this.nodeMarkerSep;
-        const [sx, sy] = [d.source.x, d.source.y];
-        const [tx, ty] = [d.target.x, d.target.y];
-        const [dx, dy] = [tx - sx, ty - sy];
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 1e-9) {
-          return `M${sx},${sy} L${tx},${ty}`;
-        }
-        const [ex, ey] = [dx / dist, dy / dist];
-        const [iex, iey] = [ey, -ex];
-        const alsep = this.adjacentLinkSep;
-        return `M${sx + rstart*ex + alsep*iex},${sy + rend*ey + alsep*iey}` +
-          `L${tx - rend*ex + alsep*iex},${ty - rend*ey + alsep*iey}`;
+        if (d.source.id === d.target.id) return this.drawSelfLoop(d);
+        else return this.drawUsualPath(d);
       });
+  }
+
+  drawUsualPath(d) {
+    const rstart = this.r + this.nodeLinkSep;
+    const rend = this.r + this.nodeMarkerSep;
+    const [sx, sy] = [d.source.x, d.source.y];
+    const [tx, ty] = [d.target.x, d.target.y];
+    const [dx, dy] = [tx - sx, ty - sy];
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 1e-9) {
+      // for fear 0 division
+      return `M${sx},${sy} L${tx},${ty}`;
+    }
+    const [ex, ey] = [dx / dist, dy / dist];
+    const [iex, iey] = [ey, -ex];
+    const alsep = this.adjacentLinkSep;
+    return `M${sx + rstart*ex + alsep*iex},${sy + rend*ey + alsep*iey}` +
+      `L${tx - rend*ex + alsep*iex},${ty - rend*ey + alsep*iey}`;
+  }
+
+  drawSelfLoop(d) {
+    if (!this.hasSelfLoop) return '';
+
+    const [x, y] = [d.source.x, d.source.y];
+    const dist = Math.sqrt(x*x + y*y);
+
+    let ex, ey
+    if (dist < 1e-9) {
+      // for fear 0 division
+      [ex, ey] = [1, 0];
+    } else {
+      [ex, ey] = [x / dist, y / dist];
+    }
+
+    const [slch, slcb] = [this.selfLoopCloseHeight, this.selfLoopCloseBottom];
+    const [xc, yc] = [x + slch*ex, y + slch*ey];
+    const [xs, ys] = [xc + slcb*ey, yc - slcb*ex];
+    const [xt, yt] = [xc - slcb*ey, yc + slcb*ex];
+
+    const [slfh, slfb] = [this.selfLoopFarHeight, this.selfLoopFarBottom];
+    const [xf, yf] = [x + slfh*ex, y + slfh*ey];
+    const [x1, y1] = [xf + slfb*ey, yf - slfb*ex];
+    const [x2, y2] = [xf - slfb*ey, yf + slfb*ex];
+
+    return `M${xs},${ys} C${x1},${y1} ${x2},${y2} ${xt},${yt}`;
   }
 }

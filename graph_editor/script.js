@@ -7,8 +7,6 @@ const svg = article.select('section.content')
   .attr('width', svgWidth)
   .attr('height', svgHeight);
 const textarea = menu.select('textarea');
-const chargeStrengthP = menu.select('input#chargeStrength_number')
-const linkDistanceP = menu.select('input#linkDistance_number')
 const genButton0 = menu.select('input#gen_button0');
 const genButton1 = menu.select('input#gen_button1');
 
@@ -58,16 +56,83 @@ genButton1.on('click', () => {
   gEdit.restart();
 });
 
-chargeStrengthP.attr('value', gEdit.chargeStrength)
+const graphSetting = article.select('section.graph-setting');
+graphSetting.select('input#chargeStrength_number')
+  .attr('value', gEdit.chargeStrength)
   .on('change', function() {
     const input = d3.select(this).property('value');
     gEdit.chargeStrength = Number(input);
     gEdit.initSimulation();
   });
-linkDistanceP.attr('value', gEdit.linkDistance)
+graphSetting.select('input#linkDistance_number')
+  .attr('value', gEdit.linkDistance)
   .on('change', function() {
     const input = d3.select(this).property('value');
     gEdit.linkDistance = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#slfh_number')
+  .attr('value', gEdit.selfLoopFarHeight)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.selfLoopFarHeight = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#slfb_number')
+  .attr('value', gEdit.selfLoopFarBottom)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.selfLoopFarBottom = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#slch_number')
+  .attr('value', gEdit.selfLoopCloseHeight)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.selfLoopCloseHeight = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#slcb_number')
+  .attr('value', gEdit.selfLoopCloseBottom)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.selfLoopCloseBottom = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#r_number')
+  .attr('value', gEdit.r)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.r = Number(input);
+    gEdit.initSimulation();
+    gEdit.restart();
+  });
+graphSetting.select('input#nodeLinkSep_number')
+  .attr('value', gEdit.nodeLinkSep)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.nodeLinkSep = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#nodeMarkerSep_number')
+  .attr('value', gEdit.nodeMarkerSep)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.nodeMarkerSep = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#markerSize_number')
+  .attr('value', gEdit.markerSize)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.markerSize = Number(input);
+    gEdit.initSimulation();
+  });
+graphSetting.select('input#adjacentLinkSep_number')
+  .attr('value', gEdit.adjacentLinkSep)
+  .on('change', function() {
+    const input = d3.select(this).property('value');
+    gEdit.adjacentLinkSep = Number(input);
     gEdit.initSimulation();
   });
 
