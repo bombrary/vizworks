@@ -67,17 +67,17 @@ Example:
 ```js
 // Assume svg element has already exist.
 const gedit = new GraphEditor(d3.select('svg'));
-gedit.addNode({id: 0, label: '0'});
-gedit.addNode({id: 1, label: '1'});
-gedit.addNode({id: 2, label: '2'});
-gedit.addNode({id: 3, label: '3'});
+gedit.addNode({label: '0'});
+gedit.addNode({label: '1'});
+gedit.addNode({label: '2'});
+gedit.addNode({label: '3'});
 console.log(this.nodes).
 /*
 {
-  0: {label: '0'},
-  1: {label: '1'},
-  2: {label: '2'},
-  3: {label: 'Hello'},
+  0: {id: 0, label: '0'},
+  1: {id: 1, label: '1'},
+  2: {id: 2, label: '2'},
+  3: {id: 3, label: 'Hello'},
 };
 */
 
