@@ -3,5 +3,7 @@ article {
   flex-direction: row;
 }
 
-section {
+.menu-left {
+  display: flex;
+  flex-direction: column;
 }
