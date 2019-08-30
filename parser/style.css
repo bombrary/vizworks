@@ -1,0 +1,24 @@
+article {
+  display: flex;
+  flex-direction: row;
+}
+
+section.menu-left {
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  table-layout: fixed;
+}
+
+td {
+  padding: 0;
+  margin: 0;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+}
+td:first-child {
+  font-weight: bold;
+}

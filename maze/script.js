@@ -82,7 +82,7 @@ const playButton = menu.append('input')
   });
 
 
-const testcase01 = "\
+const testcase02 = "\
 1 1\n\
 ########\n\
 #......#\n\
@@ -92,9 +92,32 @@ const testcase01 = "\
 ##.....#\n\
 ########";
 
+const testcase01 = "\
+0 1\n\
+#.######.#\n\
+......#..#\n\
+.#.##.##.#\n\
+.#........\n\
+##.##.####\n\
+....#....#\n\
+.#######.#\n\
+....#.....\n\
+.####.###.\n\
+....#....#"
+
 const testcaseButton = menu.append('input')
   .attr('type', 'button')
   .attr('value', 'testcase')
   .on('click', () => {
     textarea.property('value', testcase01);
+  });
+const mazeGen = new MazeGenerator(21, 21);
+const randomButton = menu.append('input')
+  .attr('type', 'button')
+  .attr('value', 'random')
+  .on('click', () => {
+    const mp = mazeGen.generate(1, 1);
+    textarea.property('value', '1 1\n' + mp.map(d => d.join('')).join('\n'));
+    mazeitr = new MazeHistoryIterator(solveMaze(mp, [1, 1]));
+    update(mazeitr.now());
   });

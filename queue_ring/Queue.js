@@ -1,3 +1,5 @@
+"use strict"
+
 class Queue {
   constructor(queueCapacity) {
     this.queueCapacity = queueCapacity;
@@ -39,6 +41,16 @@ class Queue {
       size: this.queueSize,
       capacity: this.queueCapacity
     };
+  }
+
+  toArray() {
+    const arr = [];
+    console.log(this.queueCapacity);
+    for (let i = 0; i < this.queueCapacity; i++) {
+      const idx = (this.head + i) % this.queueCapacity;
+      arr.push({id: idx, val: this.data[idx]});
+    }
+    return arr.reverse();
   }
   
   get size() {

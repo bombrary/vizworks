@@ -1,69 +1,21 @@
-const [svgWidth, svgHeight] = [800, 600];
+const [svgWidth, svgHeight] = [800, 500];
 const svg = d3.select('svg')
   .attr('width', svgWidth)
   .attr('height', svgHeight);
+const arrPad = 50;
 const g = svg.append('g') 
-  .attr('transform', `translate(${svgWidth/2}, ${svgHeight/2})`);
+  .attr('transform', `translate(${svgWidth/2}, ${svgHeight/2 - arrPad})`);
 g.append('g') 
   .classed('pies', true);
 g.append('g')
   .classed('ticks', true);
+g.append('g')
+  .classed('array', true);
 
-let innerRadius = 200, outerRadius = 100;
+let innerRadius = 70, outerRadius = 150;
 const update = (queue) => {
-  const { data, head, tail, size, capacity } = queue.queueInfo;
-  const pie = d3.pie()
-    .value(1)
-    .sort(null);
-  const arc = d3.arc()
-    .outerRadius(innerRadius)
-    .innerRadius(outerRadius);
-  const pieGroup = g.select('g.pies')
-    .selectAll('.pie')
-    .data(pie(data));
-  pieGroup.exit().remove();
-  const pieGroupEnter = pieGroup.enter()
-    .append('g')
-    .classed('pie', true);
-  pieGroupEnter.append('path');
-  pieGroupEnter.append('g')
-    .append('text');
-  pieGroupEnter.merge(pieGroup)
-    .select('path')
-    .transition()
-    .duration(1000)
-    .attr('fill', (d) => {
-      if (d.data === undefined) return '#aaa';
-      else return '#fff';
-    })
-    .attr('stroke', 'black')
-    .attr('d', arc);
-  pieGroupEnter.merge(pieGroup)
-    .select('g')
-    .attr('transform', d => `translate(${arc.centroid(d)})`)
-    .select('text')
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'central')
-    .text(d => d.data === undefined ? '?' : d.data);
-
-
-  const tickArc = d3.arc()
-    .outerRadius(outerRadius * 2 + 50)
-    .innerRadius(innerRadius);
-  const tick = g.select('g.ticks')
-    .selectAll('.tick')
-    .data(pie(d3.range(0, capacity)));
-  tick.exit().remove();
-  const tickEnter = tick.enter()
-    .append('g')
-    .classed('tick', true);
-  tickEnter.append('text');
-  tickEnter.merge(tick)
-    .attr('transform', d => `translate(${tickArc.centroid(d)})`)
-    .select('text')
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'central')
-    .text(d => d.data);
+  updateRingBuffer(queue);
+  updateArray(queue);
 };
 
 const q = new Queue(20);
@@ -136,4 +88,94 @@ const updateQueryInfo = () => {
   li.enter().append('li')
     .merge(li)
     .text(d => d);
+};
+
+const updateRingBuffer = (queue) =>  {
+  const { data, head, tail, size, capacity } = queue.queueInfo;
+  const pie = d3.pie()
+    .value(1)
+    .sort(null);
+  const arc = d3.arc()
+    .outerRadius(innerRadius)
+    .innerRadius(outerRadius);
+  const pieGroup = g.select('g.pies')
+    .selectAll('.pie')
+    .data(pie(data));
+  pieGroup.exit().remove();
+  const pieGroupEnter = pieGroup.enter()
+    .append('g')
+    .classed('pie', true);
+  pieGroupEnter.append('path');
+  pieGroupEnter.append('g')
+    .append('text');
+  pieGroupEnter.merge(pieGroup)
+    .select('path')
+    .transition()
+    .duration(1000)
+    .attr('fill', (d) => {
+      if (d.data === undefined) return '#aaa';
+      else return '#fff';
+    })
+    .attr('stroke', 'black')
+    .attr('d', arc);
+  pieGroupEnter.merge(pieGroup)
+    .select('g')
+    .attr('transform', d => `translate(${arc.centroid(d)})`)
+    .select('text')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .text(d => d.data === undefined ? '?' : d.data);
+
+  const tickArc = d3.arc()
+    .outerRadius(1.5*outerRadius + 50)
+    .innerRadius(innerRadius);
+  const tick = g.select('g.ticks')
+    .selectAll('.tick')
+    .data(pie(d3.range(0, capacity)));
+  tick.exit().remove();
+  const tickEnter = tick.enter()
+    .append('g')
+    .classed('tick', true);
+  tickEnter.append('text');
+  tickEnter.merge(tick)
+    .attr('transform', d => `translate(${tickArc.centroid(d)})`)
+    .select('text')
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .text(d => d.data);
+};
+
+const [rectWidth, rectHeight] = [30, 30];
+const updateArray = (queue) => {
+  const data = queue.toArray();
+
+  const arrGroup = svg.select('.array')
+    .attr('transform', `translate(${-rectWidth*data.length/2}, ${outerRadius + arrPad})`);
+  const elem = arrGroup.selectAll('.elem')
+    .data(data, d => d.id);
+  elem.exit().remove();
+  const elemEnter = elem.enter().append('g')
+    .classed('elem', true);
+  elemEnter.append('rect');
+  elemEnter.append('text');
+
+  const elemMerge = elemEnter
+    .merge(elem)
+    .transition()
+    .duration(1000);
+  elemMerge.attr('transform', (d, i) => `translate(${i*rectWidth}, ${0})`);
+  elemMerge.select('rect')
+    .attr('fill', (d) => {
+      if (d.val === undefined) return '#aaa';
+      else return '#fff';
+    })
+    .attr('stroke', '#000')
+    .attr('width', rectWidth)
+    .attr('height', rectHeight);
+  elemMerge.select('text')
+    .attr('dx', rectWidth/2)
+    .attr('dy', rectHeight/2)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .text(d => d.val);
 };
