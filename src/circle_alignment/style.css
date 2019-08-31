@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+svg {
+  border: 1px solid #000;
+}
+
+text {
+  user-select: none;
+}
