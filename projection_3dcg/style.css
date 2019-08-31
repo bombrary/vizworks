@@ -1,0 +1,15 @@
+article {
+  display: flex;
+  flex-direction: row;
+}
+
+section {
+}
+
+.menu-right {
+  margin-left: 10px;
+}
+
+svg {
+  background-color: black;
+}

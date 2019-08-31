@@ -1,0 +1,33 @@
+article {
+  display: flex;
+  flex-direction: row;
+}
+
+section.menu-left {
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+td {
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+}
+
+p.number-form {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  text-align: right;
+}
+p.number-form label {
+  width: 30%;
+}
+p.number-form input {
+  width: 70%;
+}

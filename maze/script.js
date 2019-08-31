@@ -77,7 +77,7 @@ const playButton = menu.append('input')
           t.stop();
           timerEnabled = false;
         }
-      }, 200);
+      }, 100);
     }
   });
 
