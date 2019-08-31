@@ -18,6 +18,9 @@ const startButton = menu.append('input')
 const stopButton = menu.append('input')
   .attr('type', 'button')
   .attr('value', 'stop');
+const testcaseButton = menu.append('input')
+  .attr('type', 'button')
+  .attr('value', 'testcase');
 const queryInfo = menu.append('div')
 const queryName = queryInfo.append('p');
 const queryArgs = queryInfo.append('p');
@@ -70,6 +73,30 @@ genButton.on('click', () => {
   update(rmqFormatter(st));
 });
 
+
+let itr_step;
+itrButton.on('click', () => {
+  if (query_step === undefined || itr_step === undefined) return;
+  if (itr_step === st.history.length) itr_step = 0;
+  iterateQuery();
+});
+
+let query_timer;
+const timer_interval = 50;
+const startTimer = () => {
+  if (query_step === undefined || itr_step === undefined) return;
+  itr_step = 0;
+  query_timer = d3.interval((elapsed) => {
+    if (itr_step === st.history.length - 1) query_timer.stop();
+    iterateQuery();
+  }, timer_interval);
+}
+startButton.on('click', startTimer);
+stopButton.on('click', () => {
+  if (query_step === undefined || itr_step === undefined) return;
+  query_timer.stop();
+});
+
 let query_step;
 nextQueryButton.on('click', () => {
   if (query_step === undefined) return;
@@ -88,29 +115,9 @@ nextQueryButton.on('click', () => {
     update(rmqFormatter(st.history[0], x-1, y));
   }
   itr_step = 1;
+  startTimer();
 });
 
-let itr_step;
-itrButton.on('click', () => {
-  if (query_step === undefined || itr_step === undefined) return;
-  if (itr_step === st.history.length) itr_step = 0;
-  iterateQuery();
-});
-
-let query_timer;
-const timer_interval = 50;
-startButton.on('click', () => {
-  if (query_step === undefined || itr_step === undefined) return;
-  itr_step = 0;
-  query_timer = d3.interval((elapsed) => {
-    if (itr_step === st.history.length - 1) query_timer.stop();
-    iterateQuery();
-  }, timer_interval);
-});
-stopButton.on('click', () => {
-  if (query_step === undefined || itr_step === undefined) return;
-  query_timer.stop();
-});
 
 function iterateQuery() {
   let [c, x, y] = st_query[query_step];
@@ -119,3 +126,59 @@ function iterateQuery() {
   update(rmqFormatter(st.history[itr_step], l, r));
   itr_step++;
 }
+
+const testcase =
+"10 50\n" +
+"0 4 12\n" +
+"0 1 8\n" +
+"1 7 7\n" +
+"0 2 1\n" +
+"0 6 8\n" +
+"0 1 16\n" +
+"0 3 17\n" +
+"0 3 18\n" +
+"1 4 10\n" +
+"1 5 10\n" +
+"0 8 40\n" +
+"1 1 6\n" +
+"1 1 3\n" +
+"1 2 4\n" +
+"1 7 7\n" +
+"0 10 47\n" +
+"0 2 40\n" +
+"1 5 6\n" +
+"0 1 27\n" +
+"1 4 5\n" +
+"1 1 10\n" +
+"1 3 7\n" +
+"1 1 4\n" +
+"0 10 5\n" +
+"0 10 27\n" +
+"0 8 24\n" +
+"1 7 10\n" +
+"1 4 6\n" +
+"0 7 9\n" +
+"1 3 6\n" +
+"0 9 1\n" +
+"1 1 8\n" +
+"0 7 13\n" +
+"0 8 42\n" +
+"1 3 9\n" +
+"0 1 30\n" +
+"1 2 2\n" +
+"1 5 8\n" +
+"0 6 38\n" +
+"0 9 37\n" +
+"0 8 13\n" +
+"0 6 0\n" +
+"1 3 4\n" +
+"1 4 8\n" +
+"0 1 40\n" +
+"0 9 26\n" +
+"0 8 8\n" +
+"0 9 38\n" +
+"0 4 38\n" +
+"1 2 7";
+testcaseButton.on('click', () => {
+  textarea.property('value', testcase);
+});
