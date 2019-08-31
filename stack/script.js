@@ -26,6 +26,8 @@ const update = (stack) => {
 
   const t = d3.transition()
     .duration(1000);
+  const tt = t.transition()
+    .duration(0);
 
   if (log === 'poped') {
     elem.each((d, i, node) => {
@@ -79,7 +81,7 @@ const update = (stack) => {
   }
 
   const elemMerge = elemEnter.merge(elem)
-    .transition(t)
+    .transition(tt)
   elemMerge.attr('transform', (d, i) => `translate(0, ${scale(i)})`)
     .style('opacity', 1);
   elemMerge.select('rect')
