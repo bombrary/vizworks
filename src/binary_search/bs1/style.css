@@ -5,3 +5,28 @@
 .outer p {
   padding: 0 10px;
 }
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-right {
+  margin-left: 10px;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+td {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  padding: 2px;
+}

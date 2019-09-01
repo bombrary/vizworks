@@ -5,7 +5,7 @@ const svg = d3.select('.content')
   .attr('height', svgHeight);
 const pad = 15;
 const update = (data) => {
-  const {extent, histories, val} = data;
+  const {extent, histories} = data;
   const scale = d3.scaleLinear()
     .domain(extent)
     .range([pad, svgWidth - pad]);
@@ -34,58 +34,61 @@ const update = (data) => {
           }
         });
     })
-  unitEnter.selectAll('path.edge')
-    .data(d => [[d.l, val], [val, d.r]])
-    .enter()
-    .append('path')
+  unitEnter.append('path')
+    .datum(d => [d.l, d.r])
     .classed('edge', true)
     .attr('stroke-width', 5)
-    .attr('stroke', (d, i) => i === 0 ? 'green' : 'red')
+    .attr('stroke', 'green')
     .attr('fill', 'none')
     .attr('d', d => `M${scale(d[0])},${2.5} L${scale(d[1])},${2.5}`)
   unitEnter.append('circle')
     .datum(d => d.mid)
-    .attr('r', 2)
+    .attr('r', 3)
     .attr('cx', d => scale(d))
+    .attr('cy', 1.5)
     .attr('fill', 'yellow')
     .attr('stroke', 'black');
 
 }
-
-const binarySearch = (extent, val) => {
-  const ret = new BsHistory(extent, val);
-  let l = extent[0], r = extent[1];
-  let mid = Math.floor((r + l) / 2);
-  ret.push(l, r, mid);
-  while (r - l > 1) {
-    mid = Math.floor((r + l) / 2);
-    if (mid <= val) l = mid;
-    else r = mid;
-    ret.push(l, r, mid);
-  }
-  return ret;
-};
 
 const putButton = (name) => d3.select('.menu-left')
     .append('input')
     .attr('type', 'button')
     .attr('value', name);
 
-let itr;
-putButton('generate')
+let histories = [];
+let extent = [0, 990];
+let l = 0, r = 990, mid = Math.floor((l + r)/2);
+histories.push({l, r, mid});
+update({extent, histories});
+d3.selectAll('.mid-val')
+  .text(mid);
+d3.select('#le_btn')
   .on('click', () => {
-    const rnd = d3.randomUniform(0, 990);
-    const rand = () => Math.floor(rnd());
-    const x = rand();
-
-    itr = new Iterator(binarySearch([0, 990], x));
-    svg.selectAll('*').remove();
-    update(itr.now);
-    d3.selectAll('.value')
-      .text(x);
+    l = mid;
+    mid = Math.floor((l + r)/2);
+    histories.push({l, r, mid});
+    update({extent, histories});
+    d3.selectAll('.mid-val')
+      .text(mid);
   });
-putButton('iterate')
+d3.select('#gt_btn')
   .on('click', () => {
-    itr.next();
-    update(itr.now);
+    r = mid;
+    mid = Math.floor((l + r)/2);
+    histories.push({l, r, mid});
+    update({extent, histories});
+    d3.selectAll('.mid-val')
+      .text(mid);
+  });
+putButton('Clear')
+  .on('click', () => {
+    histories = [];
+    histories.push({l, r, mid});
+    l = 0;
+    r = 990;
+    mid = Math.floor((l + r)/2);
+    update({extent, histories});
+    d3.selectAll('.mid-val')
+      .text(mid);
   });

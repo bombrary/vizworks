@@ -1,57 +1,65 @@
-let randD = d3.randomUniform(0, 50);
-let rand10 = () => Math.floor(randD());
+"use strict"
 
-let dat = [];
-let x = rand10();
-for (let i = 0; i < 30; i++) {
-  let num = rand10();
-  dat.push(num);
-}
-dat.sort((a, b) => (a - b));
-let l = -1, r = dat.length, mid = Math.floor((l + r) / 2);
+const table = d3.select('.content')
+  .append('table');
 
-//d3.select('body').append('div').attr('class', 'outer');
-const showData = function() {
-  //let p = d3.select('body div.outer')
-  //  .selectAll('p')
-  //  .data(dat);
-  d3.select('body')
-    .append('div')
-    .attr('class', 'outer')
-    .selectAll('p')
-    .data(dat)
-    .enter()
-    .append('p')
-    .text((d)=>d)
-    .style('background', (d, i) => {
-        if (i == mid) return 'yellow';
-        else if (i < l || r < i) return 'white';
-        else if (d <= x) return 'lightgreen';
-        else return 'orangered';
-      });
-  /*p.enter()
-    .append('p')
-    .text((d) => d)
-    .merge(p)
-    .transition()
-    .duration(1000)
-    .style('background', (d, i) => {
-      if (i == mid) return 'yellow';
-      else if (i < l || r < i) return 'white';
-      else if (d <= x) return 'lightgreen';
-      else return 'orangered';
-    })*/
-}
+const update = (data) => {
+  const tr = table.selectAll('tr')
+    .data(data);
+  tr.exit().remove();
+  const td = tr.enter()
+    .append('tr')
+    .merge(tr)
+    .selectAll('td')
+    .data(d => d);
+  td.exit().remove();
+  td.enter()
+    .append('td')
+    .merge(td)
+    .text(d => d.val)
+    .style('background-color', d => d.col);
+};
 
-d3.select('#next_gen')
-.on('click', () => {
-  if (dat[mid] <= x) l = mid;
-  else r = mid;
-  mid = Math.floor((l + r) / 2);
-  showData();
-  console.log({l, mid, r});
-});
-d3.select('body')
-  .append('p')
-  .text(`${x}`);
-showData();
+
+const binarySearch = (data, val) => {
+  const ret = new BsHistory(data, val);
+  let l = -1, r = data.length;
+  let mid = Math.floor((r + l) / 2);
+  ret.push(l, r, mid);
+  while (r - l > 1) {
+    mid = Math.floor((r + l) / 2);
+    if (data[mid] <= val) l = mid;
+    else r = mid;
+    ret.push(l, r, mid);
+  }
+  return ret;
+};
+
+const putButton = (name) => d3.select('.menu-left')
+    .append('input')
+    .attr('type', 'button')
+    .attr('value', name);
+
+let itr;
+putButton('generate')
+  .on('click', () => {
+    let randD = d3.randomUniform(0, 50);
+    let rand10 = () => Math.floor(randD());
+
+    let dat = [];
+    let x = rand10();
+    for (let i = 0; i < 30; i++) {
+      let num = rand10();
+      dat.push(num);
+    }
+    dat.sort((a, b) => (a - b));
+    itr = new Iterator(binarySearch(dat, x));
+    update(itr.now);
+    d3.selectAll('.value')
+      .text(x);
+  });
+putButton('iterate')
+  .on('click', () => {
+    itr.next();
+    update(itr.now);
+  });

@@ -1,7 +1,0 @@
-.outer {
-  display: flex;
-  flex-direction: row;
-}
-.outer p {
-  padding: 0 10px;
-}
